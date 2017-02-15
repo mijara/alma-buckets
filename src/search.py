@@ -18,7 +18,7 @@ class Alarm(object):
 
 
 class Searcher(object):
-    def __init__(self, ftime, ttime=None, per_page=250):
+    def __init__(self, ftime, query, ttime=None, per_page=250):
         """
         Creates a new alarm searcher object, given a from time and optional to time.
         Results can be asked all at once or paginated, every result is returned as
@@ -31,11 +31,12 @@ class Searcher(object):
         self.ftime = ftime
         self.ttime = ttime
         self.per_page = per_page
+        self.query = query
 
         inds = indexes.get_indexes('alarm', ftime, ttime)
 
         # create the search object.
-        self.search = elasticsearch_dsl.Search(index='alarm-*')
+        self.search = elasticsearch_dsl.Search(index=inds)
 
         # sort by timestamp ascending.
         self.search = self.search.sort({
@@ -54,6 +55,9 @@ class Searcher(object):
                 }
             }
         })
+
+        # use query.
+        self.search = self.search.query("query_string", query=self.query, analyze_wildcard=True)
 
     def get_all(self):
         response = self.search[:self.search.count()]
