@@ -21,10 +21,8 @@ if __name__ == '__main__':
         buckets = conf['buckets']
     else:
         buckets = [
-            FullBucket(),
             OverviewBucket(),
-            #PrefixBucket('ONLINE'),
-            #PriorityBucket('WARNING'),
+            FullBucket(),
         ]
 
     for alarm in searcher.pages():
