@@ -1,0 +1,21 @@
+{
+  "buckets": {
+    "load": [
+      "../custom.py"
+    ],
+    "list": [
+      {
+        "name": "PrefixBucket",
+        "args": ["ONLINE"]
+      },
+      {
+        "name": "PrefixBucket",
+        "args": ["OFFLINE"]
+      },
+      {
+        "name": "OverviewBucket",
+        "args": []
+      }
+    ]
+  }
+}

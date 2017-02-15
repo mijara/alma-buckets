@@ -1,8 +1,9 @@
-from search import Searcher
-from buckets import OverviewBucket, PrefixBucket, PriorityBucket, FullBucket
+from elasticsearch_dsl.connections import connections
 
 from args import args
-from elasticsearch_dsl.connections import connections
+from loader import load_conf
+from search import Searcher
+from buckets import OverviewBucket, FullBucket
 
 if __name__ == '__main__':
     options = args()
@@ -14,12 +15,17 @@ if __name__ == '__main__':
 
     print 'Request time range: %s to %s' % (options['from'], options['to'])
 
-    buckets = [
-        FullBucket(),
-        OverviewBucket(),
-        #PrefixBucket('ONLINE'),
-        #PriorityBucket('WARNING'),
-    ]
+    conf = load_conf()
+
+    if conf['buckets'] is not None:
+        buckets = conf['buckets']
+    else:
+        buckets = [
+            FullBucket(),
+            OverviewBucket(),
+            #PrefixBucket('ONLINE'),
+            #PriorityBucket('WARNING'),
+        ]
 
     for alarm in searcher.pages():
         for bucket in buckets:
