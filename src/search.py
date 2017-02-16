@@ -37,13 +37,13 @@ def _get_priorities_ignored(min_priority):
 
 class Alarm(object):
     def __init__(self, hit):
-        self.name = hit['name'] if 'name' in hit else 'UNNAMED'
+        self.path = hit['path'] if 'path' in hit else 'NOPATH'
         self.timestamp = hit['@timestamp']
         self.priority = hit['priority'] if 'priority' in hit else 'INVALID'
         self.body = hit['body'].to_dict() if 'body' in hit else {}
 
     def __str__(self):
-        return "%s %s %s :: %s" % (self.timestamp, self.priority, self.name,
+        return "%s %s %s :: %s" % (self.timestamp, self.priority, self.path,
                                    json.dumps(self.body))
 
 

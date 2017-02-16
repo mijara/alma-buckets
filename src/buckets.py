@@ -126,7 +126,7 @@ class PrefixBucket(Bucket):
         return 'PREFIX "%s"' % self.prefix
 
     def cherry_pick(self, alarm):
-        if alarm.name.startswith(self.prefix):
+        if alarm.path.startswith(self.prefix):
             self.picked.append(str(alarm))
 
     def dump_content(self):
