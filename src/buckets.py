@@ -1,16 +1,54 @@
 class Bucket(object):
+    """
+    A Bucket is an object that collects alarms, and potentially
+    displays useful information to STDOUT for Jenkins to parse.
+
+    For each alarm that the searcher collects, this object
+    cherry_pick method gets called with that alarm.
+    """
+
+    # Guard format for bars.
     GUARD_FORMAT = "==== {0} ===="
 
     def cherry_pick(self, alarm):
+        """
+        the Cherry Pick method receives an alarm to analyze it,
+        the intention is that the bucket decides if the alarm is
+        useful or not.
+
+        :param alarm: the Alarm object
+        """
         raise NotImplementedError()
 
     def dump_content(self):
+        """
+        Must dump the content of this Bucket to STDOUT (print it).
+        """
         raise NotImplementedError()
 
     def get_guard(self):
+        """
+        Returns the guard bars for Jenkins to identify. For
+        example the OverviewBucket returns "OVERVIEW".
+
+        :return: a guard string
+        """
+        raise NotImplementedError()
+
+    def has_content(self):
+        """
+        Returns True if this Bucket has any content to display.
+
+        :return: a bool
+        """
         raise NotImplementedError()
 
     def dump(self):
+        """
+        Dumps the guards and content to STDOUT. Omits
+        the process if the bucket has no content.
+        """
+        # omit output if there's no content.
         if not self.has_content():
             return
 
@@ -20,11 +58,11 @@ class Bucket(object):
         self.dump_content()
         print self.GUARD_FORMAT.format("END " + guard)
 
-    def has_content(self):
-        raise NotImplementedError()
-
 
 class FullBucket(Bucket):
+    """
+    The Full Bucket will display each alarm.
+    """
     def __init__(self):
         self.picked = []
 
@@ -43,6 +81,16 @@ class FullBucket(Bucket):
 
 
 class OverviewBucket(Bucket):
+    """
+    The Overview Bucket will sum each type of alarm
+    by priority and display each type along with it's
+    sum.
+
+    Example:
+    CRITICAL: 42
+    WARNING: 137
+    INFO: 290
+    """
     def __init__(self):
         self.counters = {
             'INFO': 0,
@@ -56,9 +104,9 @@ class OverviewBucket(Bucket):
         self.counters[alarm.priority] += 1
 
     def dump_content(self):
-        print 'CRITICAL = %d' % self.counters['CRITICAL']
-        print 'WARNING  = %d' % self.counters['WARNING']
-        print 'INFO     = %d' % self.counters['INFO']
+        print 'CRITICAL: %d' % self.counters['CRITICAL']
+        print 'WARNING: %d' % self.counters['WARNING']
+        print 'INFO: %d' % self.counters['INFO']
 
     def get_guard(self):
         return "OVERVIEW"
@@ -71,6 +119,10 @@ class OverviewBucket(Bucket):
 
 
 class PrefixBucket(Bucket):
+    """
+    The Prefix Bucket will collect alarms whose name begin
+    with some prefix, and then it will display all of them.
+    """
     def __init__(self, prefix):
         self.prefix = prefix
         self.picked = []
@@ -91,6 +143,10 @@ class PrefixBucket(Bucket):
 
 
 class PriorityBucket(Bucket):
+    """
+    The Priority Bucket will collect all alarm that have
+    a certain priority and display all of them.
+    """
     def __init__(self, priority):
         self.priority = priority
         self.picked = []
