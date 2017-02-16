@@ -1,6 +1,8 @@
 Alma Buckets
 ============
 
+ElasticSearch alarm formatter for Jenkins Email Templates.
+
 ```
 usage: main.py [-h] [-l LAST] [-f FROM_TIME] [-t TO_TIME] [-c CONFIG]
                [-p MIN_PRIORITY]
@@ -23,3 +25,21 @@ optional arguments:
                         Minimum priority to fetch.
 
 ```
+
+## Why Buckets?
+
+This software uses the concept of Buckets to store information about alarms. 
+Each bucket receives each alarm and determines if it is useful for it's 
+operation or not, afterwards the bucket should display information collected to
+the output. This output will effectively be used by Jenkins to send an email.
+
+For example the OverviewBucket will collect how many of each type of alarm
+priority there're, and print something like:
+
+INFO: 17
+WARNING: 42
+CRITICAL: 31
+
+Bundled with this software there's also the PriorityBucket, PrefixBucket and
+FullBucket. Check the docts of the buckets module for a description of each 
+one.
