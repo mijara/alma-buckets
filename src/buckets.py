@@ -123,7 +123,7 @@ class PrefixBucket(Bucket):
         self.picked = []
 
     def get_guard(self):
-        return 'PREFIX "%s"' % self.prefix
+        return 'PREFIX \'%s\'' % self.prefix
 
     def cherry_pick(self, alarm):
         if alarm.path.startswith(self.prefix):
@@ -147,7 +147,7 @@ class PriorityBucket(Bucket):
         self.picked = []
 
     def get_guard(self):
-        return 'PRIORITY "%s"' % self.priority
+        return 'PRIORITY \'%s\'' % self.priority
 
     def cherry_pick(self, alarm):
         if alarm.priority == self.priority:
