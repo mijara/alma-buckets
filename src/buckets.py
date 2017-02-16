@@ -92,11 +92,7 @@ class OverviewBucket(Bucket):
     INFO: 290
     """
     def __init__(self):
-        self.counters = {
-            'INFO': 0,
-            'WARNING': 0,
-            'CRITICAL': 0,
-        }
+        self.counters = {}
 
     def cherry_pick(self, alarm):
         if alarm.priority not in self.counters:
@@ -104,9 +100,8 @@ class OverviewBucket(Bucket):
         self.counters[alarm.priority] += 1
 
     def dump_content(self):
-        print 'CRITICAL: %d' % self.counters['CRITICAL']
-        print 'WARNING: %d' % self.counters['WARNING']
-        print 'INFO: %d' % self.counters['INFO']
+        for key, value in self.counters.items():
+            print "%s: %d" % (key, value)
 
     def get_guard(self):
         return "OVERVIEW"

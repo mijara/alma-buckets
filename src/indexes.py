@@ -14,6 +14,16 @@ def _validate(indexes):
 
 
 def get_indexes(prefix, ftime, ttime=None):
+    """
+    Constructs each index in a time range, using the prefix and appending a
+    date format of %Y.%m.%d (eg 2017.02.16), and validates each one of them
+    with ElasticSearch, only returning the ones that are valid.
+
+    :param prefix: some prefix before the hyphen
+    :param ftime: from time
+    :param ttime: to time
+    :return: a list of valid ES indexes.
+    """
     if ttime is None or ttime == 'now':
         ttime = datetime.utcnow()
 
