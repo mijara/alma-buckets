@@ -64,7 +64,10 @@ class OverviewBucket(Bucket):
         return "OVERVIEW"
 
     def has_content(self):
-        return True
+        sum = 0
+        for value in self.counters.values():
+            sum += value
+        return sum > 0
 
 
 class PrefixBucket(Bucket):
