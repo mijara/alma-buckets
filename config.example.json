@@ -1,0 +1,9 @@
+{
+  "elasticsearch": {
+    "hosts": [
+      "el-1.domain.com",
+      "el-2.domain.com",
+      "el-2.domain.com"
+    ]
+  }
+}

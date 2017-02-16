@@ -8,10 +8,10 @@ PRIORITIES = ['INFO', 'WARNING', 'CRITICAL']
 
 class Alarm(object):
     def __init__(self, hit):
-        self.name = hit['Name'] if 'Name' in hit else 'UNNAMED'
+        self.name = hit['name'] if 'name' in hit else 'UNNAMED'
         self.timestamp = hit['@timestamp'] if '@timestamp' in hit else 'INVALID'
         self.priority = hit['priority'] if 'priority' in hit else 'INVALID'
-        self.body = hit['Body'].to_dict() if 'Body' in hit else {}
+        self.body = hit['body'].to_dict() if 'body' in hit else {}
 
     def __str__(self):
         return "%s %s %s :: %s" % (self.timestamp, self.priority, self.name, json.dumps(self.body))

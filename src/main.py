@@ -3,11 +3,14 @@ from buckets import OverviewBucket, PrefixBucket, PriorityBucket, FullBucket
 
 from args import args
 from elasticsearch_dsl.connections import connections
+from conf import get_conf
 
-if __name__ == '__main__':
+
+def main():
     options = args()
+    config = get_conf(options['config_file'])
 
-    connections.create_connection(hosts=['http://isara.osf.alma.cl:9200'], timeout=30)
+    connections.create_connection(hosts=config['elasticsearch']['hosts'], timeout=30)
 
     searcher = Searcher(options['from'], options['query'],
                         ttime=options['to'], per_page=500)
@@ -15,10 +18,9 @@ if __name__ == '__main__':
     print 'Request time range: %s to %s' % (options['from'], options['to'])
 
     buckets = [
-        FullBucket(),
         OverviewBucket(),
-        #PrefixBucket('ONLINE'),
-        #PriorityBucket('WARNING'),
+        PrefixBucket('ONLINE'),
+        PrefixBucket('OFFLINE'),
     ]
 
     for alarm in searcher.pages():
@@ -27,3 +29,10 @@ if __name__ == '__main__':
 
     for bucket in buckets:
         bucket.dump()
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as e:
+        print e
