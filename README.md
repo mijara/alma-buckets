@@ -36,9 +36,9 @@ the output. This output will effectively be used by Jenkins to send an email.
 For example the OverviewBucket will collect how many of each type of alarm
 priority there're, and print something like:
 
-INFO: 17
-WARNING: 42
-CRITICAL: 31
+    INFO: 17
+    WARNING: 42
+    CRITICAL: 31
 
 Bundled with this software there's also the PriorityBucket, PrefixBucket and
 FullBucket. Check the docts of the buckets module for a description of each 
