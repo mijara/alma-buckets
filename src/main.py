@@ -18,11 +18,7 @@ def main():
 
     print 'Request time range: %s to %s' % (options['from'], options['to'])
 
-    buckets = [
-        OverviewBucket(),
-        PrefixBucket('ONLINE'),
-        PrefixBucket('OFFLINE'),
-    ]
+    buckets = config['buckets']
 
     for alarm in searcher.pages():
         for bucket in buckets:

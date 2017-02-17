@@ -5,5 +5,22 @@
       "el-2.domain.com",
       "el-2.domain.com"
     ]
-  }
+  },
+  "buckets": [
+    {
+      "name": "overview"
+    },
+    {
+      "name": "priority",
+      "value": "INFO"
+    },
+    {
+      "name": "priority",
+      "value": "WARNING"
+    },
+    {
+      "name": "priority",
+      "value": "CRITICAL"
+    }
+  ]
 }
