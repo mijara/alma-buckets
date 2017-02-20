@@ -7,16 +7,21 @@ from conf import get_conf
 
 
 def main():
+    # get options from console.
     options = args()
+
+    # get configuration from file.
     config = get_conf(options['config_file'])
 
-    connections.create_connection(hosts=config['elasticsearch']['hosts'], timeout=30)
+    # create ES connection to hosts.
+    connections.create_connection(hosts=config['elasticsearch']['hosts'],
+                                  timeout=30)
 
+    # create the searcher instance to find alarms, given the options from
+    # console.
     searcher = Searcher(options['from'], options['query'],
                         ttime=options['to'], per_page=500,
                         min_priority=options['min_priority'])
-
-    print 'Request time range: %s to %s' % (options['from'], options['to'])
 
     buckets = [
         OverviewBucket(),
@@ -24,10 +29,12 @@ def main():
         PrefixBucket('OFFLINE'),
     ]
 
+    # manually fetch all alarms from the searcher and pass it to every bucket.
     for alarm in searcher.pages():
         for bucket in buckets:
             bucket.cherry_pick(alarm)
 
+    # dump all buckets, this will print out all buckets.
     for bucket in buckets:
         bucket.dump()
 
@@ -36,4 +43,5 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as e:
+        # print the exception to STDOUT without the stacktrace.
         print e

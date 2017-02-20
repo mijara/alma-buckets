@@ -36,11 +36,20 @@ def _get_priorities_ignored(min_priority):
 
 
 class Alarm(object):
-    def __init__(self, hit):
-        self.path = hit['path'] if 'path' in hit else 'NOPATH'
-        self.timestamp = hit['@timestamp']
-        self.priority = hit['priority'] if 'priority' in hit else 'INVALID'
-        self.body = hit['body'].to_dict() if 'body' in hit else {}
+    def __init__(self, path, timestamp, priority, body):
+        self.path = path
+        self.timestamp = timestamp
+        self.priority = priority
+        self.body = body
+
+    @classmethod
+    def from_hit(cls, hit):
+        path = hit['path'] if 'path' in hit else 'NOPATH'
+        timestamp = hit['@timestamp']
+        priority = hit['priority'] if 'priority' in hit else 'INVALID'
+        body = hit['body'].to_dict() if 'body' in hit else {}
+
+        return Alarm(path, timestamp, priority, body)
 
     def __str__(self):
         return "%s %s %s :: %s" % (self.timestamp, self.priority, self.path,
@@ -104,7 +113,7 @@ class Searcher(object):
 
         # for every hit, create an alarm object and yield it.
         for hit in response:
-            yield Alarm(hit)
+            yield Alarm.from_hit(hit)
 
     def page(self, num):
         """
@@ -119,7 +128,7 @@ class Searcher(object):
         response = self.search[start:end].execute()
 
         for hit in response:
-            yield Alarm(hit)
+            yield Alarm.from_hit(hit)
 
     def pages(self):
         """
