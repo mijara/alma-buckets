@@ -162,7 +162,12 @@ class PriorityBucket(Bucket):
 
 
 class RangeCount(object):
-    kibana_url = "/app/kibana#/discover?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'{from_time}',mode:absolute,to:'{to_time}'))&_a=(columns:!(LogLevel,Process,SourceObject,text),index:'alarm-*',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'path:%20%22{path}%22')),sort:!('@timestamp',desc))"
+    kibana_url = "/app/kibana#/discover?_g=(refreshInterval:(display:Off," \
+                 "pause:!f,value:0),time:(from:'{from_time}',mode:absolute," \
+                 "to:'{to_time}'))&_a=(columns:!(LogLevel,Process," \
+                 "SourceObject,text),index:'alarm-*',interval:auto,query:" \
+                 "(query_string:(analyze_wildcard:!t,query:" \
+                 "'path:%20%22{path}%22')),sort:!('@timestamp',desc))"
 
     def __init__(self, begin, path):
         self.begin = begin
@@ -179,7 +184,8 @@ class RangeCount(object):
             path=self.path
         )
 
-        return "%d alarms from %s to %s. See <a href='%s'>Kibana</a>" \
+        return "%d alarms from %s to %s.\n" \
+               "See in Kibana: %s" \
                % (self.count, self.begin, self.end, url)
 
 
