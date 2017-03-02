@@ -5,5 +5,6 @@
       "el-2.domain.com",
       "el-2.domain.com"
     ]
-  }
+  },
+  "kibana": "kibana.domain.com:5601"
 }

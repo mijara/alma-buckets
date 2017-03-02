@@ -5,7 +5,8 @@ def get_conf(file_path):
     conf = {
         'elasticsearch': {
             'hosts': ['localhost:9200']
-        }
+        },
+        'kibana': 'localhost:5601'
     }
 
     if file_path is None:
@@ -21,5 +22,8 @@ def get_conf(file_path):
             raise ValueError('Config file must contain an elasticsearch.hosts field')
 
         conf['elasticsearch']['hosts'] = raw['elasticsearch']['hosts']
+
+        if 'kibana' in raw:
+            conf['kibana'] = raw['kibana']
 
     return conf

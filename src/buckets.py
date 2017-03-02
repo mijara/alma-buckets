@@ -161,26 +161,49 @@ class PriorityBucket(Bucket):
         return len(self.picked) > 0
 
 
+class RangeCount(object):
+    kibana_url = "/app/kibana#/discover?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'{from_time}',mode:absolute,to:'{to_time}'))&_a=(columns:!(LogLevel,Process,SourceObject,text),index:'alarm-*',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'path:%20%22{path}%22')),sort:!('@timestamp',desc))"
+
+    def __init__(self, begin, path):
+        self.begin = begin
+        self.end = None
+        self.path = path
+        self.count = 1
+
+    def to_str(self, kibana_host):
+        kibana = kibana_host + self.kibana_url
+
+        url = kibana.format(
+            from_time=self.begin,
+            to_time=self.end,
+            path=self.path
+        )
+
+        return "%d alarms from %s to %s. See <a href='%s'>Kibana</a>" \
+               % (self.count, self.begin, self.end, url)
+
+
 class PathClassBucket(Bucket):
-    def __init__(self):
-        self.buckets = {}
+    def __init__(self, kibana_host):
+        self.kibana_host = kibana_host
+        self.range_counts = {}
 
     def cherry_pick(self, alarm):
-        if alarm.path not in self.buckets:
-            self.buckets[alarm.path] = PrefixBucket(alarm.path)
-        self.buckets[alarm.path].cherry_pick(alarm)
+        if alarm.path not in self.range_counts:
+            self.range_counts[alarm.path] = \
+                RangeCount(alarm.timestamp, alarm.path)
+        else:
+            self.range_counts[alarm.path].end = alarm.timestamp
+            self.range_counts[alarm.path].count += 1
 
     def get_guard(self):
         return 'MULTI'
 
     def dump_content(self):
-        for bucket in self.buckets.values():
-            print bucket.prefix
-            bucket.dump_content()
+        for prefix, rc in self.range_counts.items():
+            print prefix
+            print rc.to_str(self.kibana_host)
             print
 
     def has_content(self):
-        for bucket in self.buckets.values():
-            if bucket.has_content():
-                return True
-        return False
+        return len(self.range_counts)

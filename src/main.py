@@ -25,7 +25,7 @@ def main():
                         min_priority=options['min_priority'])
 
     buckets = [
-        PathClassBucket()
+        PathClassBucket(config['kibana'])
     ]
 
     # manually fetch all alarms from the searcher and pass it to every bucket.
@@ -39,8 +39,4 @@ def main():
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as e:
-        # print the exception to STDOUT without the stacktrace.
-        print e
+    main()
