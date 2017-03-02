@@ -184,9 +184,15 @@ class RangeCount(object):
             path=self.path
         )
 
-        return ("<div>%d alarms from %s to %s. "
-                "<a href=\"%s\">See in Kibana</a></div>") % \
-               (self.count, self.begin, self.end, url)
+        html_link = "<a href=\"%s\">See in Kibana</a>" % url
+
+        if self.end is None:
+            text = "%d alarm at %s." % (self.count, self.begin)
+        else:
+            text = "%d alarms from %s to %s." % \
+                   (self.count, self.begin, self.end)
+
+        return "<div>%s %s</div>" % (text, html_link)
 
 
 class PathClassBucket(Bucket):
