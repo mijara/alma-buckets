@@ -1,5 +1,6 @@
 from search import Searcher
-from buckets import OverviewBucket, PrefixBucket, PriorityBucket, FullBucket
+from buckets import OverviewBucket, PrefixBucket, PriorityBucket, FullBucket, \
+    PathClassBucket
 
 from args import args
 from elasticsearch_dsl.connections import connections
@@ -24,9 +25,7 @@ def main():
                         min_priority=options['min_priority'])
 
     buckets = [
-        OverviewBucket(),
-        PrefixBucket('ONLINE'),
-        PrefixBucket('OFFLINE'),
+        PathClassBucket()
     ]
 
     # manually fetch all alarms from the searcher and pass it to every bucket.

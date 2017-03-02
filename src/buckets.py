@@ -159,3 +159,28 @@ class PriorityBucket(Bucket):
 
     def has_content(self):
         return len(self.picked) > 0
+
+
+class PathClassBucket(Bucket):
+    def __init__(self):
+        self.buckets = {}
+
+    def cherry_pick(self, alarm):
+        if alarm.path not in self.buckets:
+            self.buckets[alarm.path] = PrefixBucket(alarm.path)
+        self.buckets[alarm.path].cherry_pick(alarm)
+
+    def get_guard(self):
+        return 'MULTI'
+
+    def dump_content(self):
+        for bucket in self.buckets.values():
+            print bucket.prefix
+            bucket.dump_content()
+            print
+
+    def has_content(self):
+        for bucket in self.buckets.values():
+            if bucket.has_content():
+                return True
+        return False
