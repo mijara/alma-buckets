@@ -184,9 +184,9 @@ class RangeCount(object):
             path=self.path
         )
 
-        return "%d alarms from %s to %s.\n" \
-               "See in Kibana: %s" \
-               % (self.count, self.begin, self.end, url)
+        return ("<div>%d alarms from %s to %s. "
+                "<a href=\"%s\">See in Kibana</a></div>") % \
+               (self.count, self.begin, self.end, url)
 
 
 class PathClassBucket(Bucket):
@@ -207,9 +207,9 @@ class PathClassBucket(Bucket):
 
     def dump_content(self):
         for prefix, rc in self.range_counts.items():
-            print prefix
+            print '<p>%s</p>' % prefix
             print rc.to_str(self.kibana_host)
-            print
+            print '<br>'
 
     def has_content(self):
         return len(self.range_counts)
