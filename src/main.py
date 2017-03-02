@@ -5,6 +5,7 @@ from buckets import OverviewBucket, PrefixBucket, PriorityBucket, FullBucket, \
 from args import args
 from elasticsearch_dsl.connections import connections
 from conf import get_conf
+import utils
 
 
 def main():
@@ -25,7 +26,8 @@ def main():
                         min_priority=options['min_priority'])
 
     buckets = [
-        PathClassBucket(config['kibana'])
+        PathClassBucket(utils.build_url(
+            config['kibana']['host'], config['kibana']['secure']))
     ]
 
     # manually fetch all alarms from the searcher and pass it to every bucket.

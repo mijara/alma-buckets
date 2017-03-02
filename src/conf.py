@@ -6,7 +6,10 @@ def get_conf(file_path):
         'elasticsearch': {
             'hosts': ['localhost:9200']
         },
-        'kibana': 'localhost:5601'
+        'kibana': {
+            'host': 'localhost:5601',
+            'secure': False
+        }
     }
 
     if file_path is None:
@@ -24,6 +27,11 @@ def get_conf(file_path):
         conf['elasticsearch']['hosts'] = raw['elasticsearch']['hosts']
 
         if 'kibana' in raw:
-            conf['kibana'] = raw['kibana']
+            if 'host' in raw['kibana']:
+                conf['kibana'] = raw['kibana']
+
+            if 'secure' in raw['kibana']:
+                conf['kibana']['secure'] = raw['kibana']['secure']
+
 
     return conf
